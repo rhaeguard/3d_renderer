@@ -98,8 +98,20 @@ void draw_grid(void) {
     for (int r=0;r<window_height;r++) {
         for (int c=0; c<window_width; c++) {
             if (r % 10 == 0 || c % 10 == 0) {
-                color_buffer[window_width * r + c] = 0xFFC0C0C0;
+                color_buffer[window_width * r + c] = 0xFF333333;
             }
+        }
+    }
+}
+
+void draw_rect(
+    int x, int y, int w, int h, uint32_t color
+) {
+    for (int r=0;r<h;r++) {
+        for (int c=0; c<w; c++) {
+            int curr_x = x + c;
+            int curr_y = y + r;
+            color_buffer[(window_width * curr_y) + curr_x] = color;
         }
     }
 }
@@ -129,6 +141,10 @@ void render(void) {
     );
     SDL_RenderClear(renderer);
     draw_grid();
+    draw_rect(
+        300, 300, 400, 200, 0xFFFF0000
+    );
+
     render_color_buffer();
 
     clear_color_buffer(0xFF000000);
