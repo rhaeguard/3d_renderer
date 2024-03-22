@@ -7,4 +7,4 @@ run:
 	./renderer
 
 clean:
-	rm ./renderer
+	rm -f ./renderer
