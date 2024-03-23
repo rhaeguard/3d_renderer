@@ -5,6 +5,9 @@
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 
+#define FPS 30
+#define FRAME_TARGET_TIME (1000 / FPS)
+
 extern int window_width;
 extern int window_height;
 

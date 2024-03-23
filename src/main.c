@@ -21,6 +21,8 @@ vec3_t cube_rotation = {
 float fov_factor = 640;
 
 bool is_running = false;
+// milliseconds
+int previous_frame_time = 0;
 
 void setup(void) {
     color_buffer = (uint32_t*) malloc(
@@ -74,6 +76,15 @@ vec2_t project(vec3_t point) {
 }
 
 void update(void) {
+    // wait until the next update time
+    int time_to_wait = FRAME_TARGET_TIME - (SDL_GetTicks() - previous_frame_time);
+
+    if (time_to_wait > 0 && time_to_wait <= FRAME_TARGET_TIME) {
+        SDL_Delay(time_to_wait);
+    }
+
+    previous_frame_time = SDL_GetTicks(); // milliseconds
+
     cube_rotation.x += 0.01;
     cube_rotation.y += 0.01;
     cube_rotation.z += 0.01;
