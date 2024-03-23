@@ -1,7 +1,7 @@
 all: clean build run
 
 build:
-	gcc -Wall -std=c99 ./src/*.c -lSDL2 -o renderer
+	gcc -Wall -std=c99 ./src/*.c -lSDL2 -lm -o renderer
 
 run: 
 	./renderer
