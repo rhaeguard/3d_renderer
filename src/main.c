@@ -33,7 +33,8 @@ void setup(void) {
         window_height
     );
 
-    load_cube_mesh_data();
+    // load_cube_mesh_data();
+    load_obj_file_data("./assets/f22.obj");
 }
 
 void process_input(void) {
@@ -54,6 +55,7 @@ void process_input(void) {
 
 // this function projects a 3D vector into a 2D vector
 vec2_t project(vec3_t point) {
+    // perspective projection
     vec2_t projected_point = {
         .x = (fov_factor * point.x) / point.z,
         .y = (fov_factor * point.y) / point.z

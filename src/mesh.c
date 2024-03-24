@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "mesh.h"
 #include "array.h"
+#include <string.h>
 
 mesh_t mesh = {
     .vertices = NULL,
@@ -48,4 +49,54 @@ void load_cube_mesh_data(void) {
     for (int i=0; i < N_CUBE_FACES; i++) {
         array_push(mesh.faces, cube_faces[i]);
     }
+}
+
+void load_obj_file_data(char* filename) {
+    // read the contents of the .obj file
+    // load the vertices and faces into the mesh object
+
+    FILE* file = fopen(filename, "r");
+
+    char buf[255];
+
+    while (fgets(buf, 255, file)) {
+        if (buf[0]=='v') {
+            if (buf[1]==' ') {
+                // vertices
+                float a, b, c;
+                sscanf(buf,"v %f %f %f\n", &a, &b, &c);
+                vec3_t v = {
+                    .x = a,
+                    .y = b,
+                    .z = c
+                };
+                array_push(mesh.vertices, v);
+            } else if (buf[1] == 't') {
+                // textures
+            } else if (buf[1] == 'n') {
+                // normals
+            }
+        } else if (buf[0] == 'f') {
+            // faces
+            int av, at, an;
+            int bv, bt, bn;
+            int cv, ct, cn;
+            sscanf(buf,
+                "f %d/%d/%d %d/%d/%d %d/%d/%d\n", 
+                &av, &at, &an,
+                &bv, &bt, &bn,
+                &cv, &ct, &cn
+            );
+
+            face_t face = {
+                .a = av,
+                .b = bv,
+                .c = cv
+            };
+
+            array_push(mesh.faces, face);
+        }
+    }
+
+    fclose(file);
 }
