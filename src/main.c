@@ -78,7 +78,7 @@ void update(void) {
 
     mesh.rotation.x += 0.01;
     mesh.rotation.y += 0.01;
-    mesh.rotation.z += 0.01;
+    // mesh.rotation.z += 0.01;
 
     int num_faces = array_length(mesh.faces);
 
