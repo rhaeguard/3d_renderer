@@ -106,6 +106,14 @@ vec2_t project(vec3_t point) {
     return projected_point;
 }
 
+// Reference: https://stackoverflow.com/a/27284318/9985287
+// compare function
+int triangle_compare_function (const void * a, const void * b) {
+    triangle_t* t1 = (triangle_t*) a;
+    triangle_t* t2 = (triangle_t*) b;
+    return t2->avg_depth - t1->avg_depth;
+}
+
 void update(void) {
     // wait until the next update time
     int time_to_wait = FRAME_TARGET_TIME - (SDL_GetTicks() - previous_frame_time);
@@ -194,19 +202,30 @@ void update(void) {
             projected_points[j].y += (window_height / 2);
         }
 
+        // calculate the average depth for each face based on the vertices after transformation
+        float avg_depth = (transformed_vertices[0].z + transformed_vertices[1].z + transformed_vertices[2].z)/3.0; 
+
         triangle_t projected_triangle = {
             .points = {
                 { projected_points[0].x, projected_points[0].y },
                 { projected_points[1].x, projected_points[1].y },
                 { projected_points[2].x, projected_points[2].y }
             },
-            .color = mesh_face.color
+            .color = mesh_face.color,
+            .avg_depth = avg_depth
         };
 
         // save for rendering
         array_push(triangles_to_render, projected_triangle);
     }
 
+    // sort the triangles to render by their average depth
+    qsort(
+        triangles_to_render, 
+        array_length(triangles_to_render), 
+        sizeof(triangle_t), 
+        triangle_compare_function
+    );
 }
 
 void render(void) {
