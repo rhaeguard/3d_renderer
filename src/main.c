@@ -114,12 +114,16 @@ void update(void) {
         // culling: find the vectors for the sides of the triangle
         vec3_t vector_ab = vec3_sub(vector_b, vector_a);
         vec3_t vector_ac = vec3_sub(vector_c, vector_a);
+        vec3_normalize(&vector_ab);
+        vec3_normalize(&vector_ac);
 
         // culling: take the cross product of those two vectors to find the normal vector
         // cross product is not commutative!
         // we're using a left handed coordinate system
         // it's clockwise, thus the following order
         vec3_t normal = vec3_cross(vector_ab, vector_ac);
+        // normalize the face normal vector
+        vec3_normalize(&normal);
 
         // culling: find the vector between a point in the triangle and the camera origin
         vec3_t camera_ray = vec3_sub(camera_position, vector_a);
