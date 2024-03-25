@@ -165,17 +165,22 @@ void render(void) {
     
     for (int i=0; i<num_triangles; i++) {
         triangle_t triangle = triangles_to_render[i];
-        draw_rect(triangle.points[0].x, triangle.points[0].y, 4, 4, 0xFFFFFF00);
-        draw_rect(triangle.points[1].x, triangle.points[1].y, 4, 4, 0xFFFFFF00);
-        draw_rect(triangle.points[2].x, triangle.points[2].y, 4, 4, 0xFFFFFF00);
 
-        draw_triangle(
+        draw_filled_triangle(
             triangle.points[0].x, triangle.points[0].y,
             triangle.points[1].x, triangle.points[1].y,
             triangle.points[2].x, triangle.points[2].y,
             0xFFFFFF00
         );
+
+        draw_triangle(
+            triangle.points[0].x, triangle.points[0].y,
+            triangle.points[1].x, triangle.points[1].y,
+            triangle.points[2].x, triangle.points[2].y,
+            0xFF000000
+        );
     }
+
     array_free(triangles_to_render);
 
     render_color_buffer();
