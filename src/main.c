@@ -11,7 +11,7 @@
 triangle_t* triangles_to_render = NULL;
 
 vec3_t camera_position = {
-    .x = 0, .y = 0, .z = -5
+    .x = 0, .y = 0, .z = 0
 };
 
 float fov_factor = 640;
@@ -34,7 +34,7 @@ void setup(void) {
     );
 
     // load_cube_mesh_data();
-    load_obj_file_data("./assets/f22.obj");
+    load_obj_file_data("./assets/cube.obj");
 }
 
 void process_input(void) {
@@ -90,8 +90,9 @@ void update(void) {
         face_vertices[1] = mesh.vertices[mesh_face.b - 1];
         face_vertices[2] = mesh.vertices[mesh_face.c - 1];
 
-        triangle_t projected_triangle;
+        vec3_t transformed_vertices[3];
 
+        // transformation
         for (int j=0; j < 3; j++) {
             vec3_t transformed_vertex = face_vertices[j];
             transformed_vertex = vec3_rotate_x(transformed_vertex, mesh.rotation.x);
@@ -99,10 +100,46 @@ void update(void) {
             transformed_vertex = vec3_rotate_z(transformed_vertex, mesh.rotation.z);
 
             // translate the vertex away from the camera
-            transformed_vertex.z -= camera_position.z;
+            transformed_vertex.z += 5;
+
+            transformed_vertices[j] = transformed_vertex;
+        }
+
+        // backface culling
+        // https://en.wikipedia.org/wiki/Back-face_culling#Implementation
+        vec3_t vector_a = transformed_vertices[0];
+        vec3_t vector_b = transformed_vertices[1];
+        vec3_t vector_c = transformed_vertices[2];
+
+        // culling: find the vectors for the sides of the triangle
+        vec3_t vector_ab = vec3_sub(vector_b, vector_a);
+        vec3_t vector_ac = vec3_sub(vector_c, vector_a);
+
+        // culling: take the cross product of those two vectors to find the normal vector
+        // cross product is not commutative!
+        // we're using a left handed coordinate system
+        // it's clockwise, thus the following order
+        vec3_t normal = vec3_cross(vector_ab, vector_ac);
+
+        // culling: find the vector between a point in the triangle and the camera origin
+        vec3_t camera_ray = vec3_sub(camera_position, vector_a);
+
+        // culling: find the dot product to find if the triangle is looking towards the camera
+        // dot product is commutative
+        float dot_normal_camera = vec3_dot(camera_ray, normal);
+
+        // bypass the triangles that are not looking at the camera
+        if (dot_normal_camera < 0) {
+            continue;
+        }
+
+        triangle_t projected_triangle;
+
+        // perform projection
+        for (int j=0; j < 3; j++) {
 
             // project the current vertex
-            vec2_t projected_point = project(transformed_vertex);
+            vec2_t projected_point = project(transformed_vertices[j]);
 
             // scale and translate the projected point to the middle of the screen
             projected_point.x += (window_width / 2);
