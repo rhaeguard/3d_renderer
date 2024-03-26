@@ -62,32 +62,31 @@ void process_input(void) {
             is_running = false;
             break;
         case SDL_KEYDOWN:
-            SDL_KeyCode key_sym = event.key.keysym.sym;
-            if (key_sym == SDLK_ESCAPE) {
+            if (event.key.keysym.sym == SDLK_ESCAPE) {
                 is_running = false;
             }
 
-            if (key_sym == SDLK_1) {
+            if (event.key.keysym.sym == SDLK_1) {
                 render_method = RENDER_WIRE_VERTEX;
             }
 
-            if (key_sym == SDLK_2) {
+            if (event.key.keysym.sym == SDLK_2) {
                 render_method = RENDER_WIRE;
             }
 
-            if (key_sym == SDLK_3) {
+            if (event.key.keysym.sym == SDLK_3) {
                 render_method = RENDER_FILL_TRIANGLE;
             }
 
-            if (key_sym == SDLK_4) {
+            if (event.key.keysym.sym == SDLK_4) {
                 render_method = RENDER_FILL_TRIANGLE_WIRE;
             }
 
-            if (key_sym == SDLK_c) {
+            if (event.key.keysym.sym == SDLK_c) {
                 cull_method = CULL_BACKFACE;
             }
 
-            if (key_sym == SDLK_d) {
+            if (event.key.keysym.sym == SDLK_d) {
                 cull_method = CULL_NONE;
             }
 
